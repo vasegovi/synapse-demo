@@ -1,0 +1,17 @@
+{
+	"name": "QueryDatalake",
+	"properties": {
+		"content": {
+			"query": " Select \n    count(*)\nfrom openrowset(\n    bulk 'https://demostreamdatalake.dfs.core.windows.net/datalake/Raw/Customer/Year=*/Month=*/Day=*/File=*/*.snappy.parquet',\n    format = 'parquet')\n AS [r];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

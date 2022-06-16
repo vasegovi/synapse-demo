@@ -1,0 +1,60 @@
+{
+	"name": "Batching_ProdCostHist",
+	"properties": {
+		"activities": [
+			{
+				"name": "StreammingLandProdCostHist",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "StreammingProdCostHist",
+						"type": "NotebookReference"
+					},
+					"parameters": {
+						"input_file": {
+							"value": {
+								"value": "@pipeline().parameters.sourceFile",
+								"type": "Expression"
+							},
+							"type": "string"
+						},
+						"input_folder_path": {
+							"value": {
+								"value": "@pipeline().parameters.sourceFolderPath",
+								"type": "Expression"
+							},
+							"type": "string"
+						},
+						"input_storageaccount": {
+							"value": "",
+							"type": "string"
+						}
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "poolname",
+						"type": "BigDataPoolReference"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"sourceFolderPath": {
+				"type": "string"
+			},
+			"sourceFile": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}

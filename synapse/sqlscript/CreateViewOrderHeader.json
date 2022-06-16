@@ -1,0 +1,17 @@
+{
+	"name": "CreateViewOrderHeader",
+	"properties": {
+		"content": {
+			"query": "CREATE VIEW OrderHeader AS\nselect \n    SalesOrderID = JSON_VALUE(Body, '$.SalesOrderID'),\n    OrderDate = JSON_VALUE(Body, '$.OrderDate'),\n    Status = JSON_VALUE(Body, '$.Status'),\n    SalesOrderNumber = JSON_VALUE(Body, '$.SalesOrderNumber'),\n    PurchaseOrderNumber = JSON_VALUE(Body, '$.PurchaseOrderNumber'),\n    AccountNumber = JSON_VALUE(Body, '$.AccountNumber'),\n    CustomerID = JSON_VALUE(Body, '$.CustomerID'),\n    SalesPersonID = JSON_VALUE(Body, '$.SalesPersonID'),\n    CreditCardID = JSON_VALUE(Body, '$.CreditCardID'),\n    CreditCardApprovalCode = JSON_VALUE(Body, '$.CreditCardApprovalCode'),\n    TotalDue = JSON_VALUE(Body, '$.TotalDue'),\n    rowguid = JSON_VALUE(Body, '$.rowguid'),\n    ModifiedDate = JSON_VALUE(Body, '$.ModifiedDate')\nfrom openrowset(\n    bulk 'https://demostreamdatalake.dfs.core.windows.net/datalake/Raw/OrderHeader/Year=*/Month=*/Day=*/File=*/*.snappy.parquet',\n    format = 'parquet')\n AS [r];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "adventureworks",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

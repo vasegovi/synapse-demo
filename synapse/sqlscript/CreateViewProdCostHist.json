@@ -1,0 +1,17 @@
+{
+	"name": "CreateViewProdCostHist",
+	"properties": {
+		"content": {
+			"query": "CREATE VIEW ProdCostHist AS\nselect \n    ProductID = JSON_VALUE(Body, '$.ProductID'),\n    StartDate = JSON_VALUE(Body, '$.StartDate'),\n    EndDate = JSON_VALUE(Body, '$.EndDate'),\n    StandardCost = JSON_VALUE(Body, '$.StandardCost'),   \n    ModifiedDate = JSON_VALUE(Body, '$.ModifiedDate')\nfrom openrowset(\n    bulk 'https://demostreamdatalake.dfs.core.windows.net/datalake/Raw/ProdCostHist/Year=*/Month=*/Day=*/File=*/*.snappy.parquet',\n    format = 'parquet')\n AS [r];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "adventureworks",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

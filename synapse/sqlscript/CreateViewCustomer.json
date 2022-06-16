@@ -1,0 +1,17 @@
+{
+	"name": "CreateViewCustomer",
+	"properties": {
+		"content": {
+			"query": "CREATE VIEW SalesCustomer AS\nselect \n    CustomerID = JSON_VALUE(Body, '$.CustomerID'),\n    PersonID = JSON_VALUE(Body, '$.PersonID'),\n    StoreID = JSON_VALUE(Body, '$.StoreID'),\n    TerritoryID = JSON_VALUE(Body, '$.TerritoryID'),\n    AccountNumber = JSON_VALUE(Body, '$.AccountNumber'),\n    rowguid = JSON_VALUE(Body, '$.rowguid'),\n    ModifiedDate = JSON_VALUE(Body, '$.ModifiedDate')\nfrom openrowset(\n    bulk 'https://demostreamdatalake.dfs.core.windows.net/datalake/Raw/Customer/Year=*/Month=*/Day=*/File=*/*.snappy.parquet',\n    format = 'parquet')\n AS [r];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "adventureworks",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

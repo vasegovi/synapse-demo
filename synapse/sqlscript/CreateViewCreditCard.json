@@ -1,0 +1,17 @@
+{
+	"name": "CreateViewCreditCard",
+	"properties": {
+		"content": {
+			"query": "CREATE VIEW CreditCard AS\nselect \n    CreditCardID = JSON_VALUE(Body, '$.CreditCardID'),\n    CardType = JSON_VALUE(Body, '$.CardType'),\n    CardNumber = JSON_VALUE(Body, '$.CardNumber'),\n    ExpMonth = JSON_VALUE(Body, '$.ExpMonth'),\n    ExpYear = JSON_VALUE(Body, '$.ExpYear'),    \n    ModifiedDate = JSON_VALUE(Body, '$.ModifiedDate')\nfrom openrowset(\n    bulk 'https://2by1datalake.dfs.core.windows.net/datalake/Raw/CreditCard/Year=*/Month=*/Day=*/File=*/*.snappy.parquet',\n    format = 'parquet')\n AS [r];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "adventureworks",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

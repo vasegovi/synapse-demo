@@ -1,0 +1,29 @@
+{
+	"name": "Trigger ProdCostHist Streamming",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Batching_ProdCostHist",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceFolderPath": "@trigger().outputs.body.folderPath",
+					"sourceFile": "@trigger().outputs.body.fileName"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "eventhubname/productcosthist",
+			"blobPathEndsWith": ".avro",
+			"ignoreEmptyBlobs": true,
+			"scope": "",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

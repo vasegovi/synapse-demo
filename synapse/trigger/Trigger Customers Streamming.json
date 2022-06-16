@@ -1,0 +1,29 @@
+{
+	"name": "Trigger Customers Streamming",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Batching",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceFolderPath": "@trigger().outputs.body.folderPath",
+					"sourceFile": "@trigger().outputs.body.fileName"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "eventhubname/customer",
+			"blobPathEndsWith": ".avro",
+			"ignoreEmptyBlobs": true,
+			"scope": "",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

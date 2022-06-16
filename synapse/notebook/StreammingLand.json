@@ -1,0 +1,221 @@
+{
+	"name": "StreammingLand",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "fc5d3a75-7d4a-4b73-8564-0686340ac258"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "",
+				"name": "poolstreamming",
+				"type": "Spark",
+				"endpoint": "",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Section which just displays some info for troubleshooting\r\n",
+					"from pyspark.sql.functions import *\r\n",
+					"from pyspark.sql.functions import split\r\n",
+					"\r\n",
+					"\r\n",
+					"displayHTML(\"Input Parameters:</br>\")\r\n",
+					"displayHTML(\"input_file: %s</br>\" % input_file)\r\n",
+					"displayHTML(\"input_folder_Path: %s</br>\" % input_folder_path)\r\n",
+					"displayHTML(\"input_storageaccount: %s</br>\" % input_storageaccount)\r\n",
+					"displayHTML(\"</br>\")\r\n",
+					"\r\n",
+					"\r\n",
+					"#Get the container from the input parameter\r\n",
+					"folderNames = input_folder_path.split(\"/\")\r\n",
+					"source_container_name = folderNames[0]\r\n",
+					"displayHTML(\"source_container_name: \")\r\n",
+					"displayHTML(source_container_name)\r\n",
+					"displayHTML(\"</br>\")\r\n",
+					"\r\n",
+					"#Get the relative path from the input parameter\r\n",
+					"source_relative_path = input_folder_path[len(source_container_name):None]\r\n",
+					"displayHTML(\"source_relative_path: \")\r\n",
+					"displayHTML(source_relative_path)\r\n",
+					"displayHTML(\"</br>\")\r\n",
+					"\r\n",
+					"#Output File\r\n",
+					"output_file_names = input_file.split(\".\")\r\n",
+					"output_file_name = output_file_names[0]\r\n",
+					"displayHTML(\"output_file_name: \")\r\n",
+					"displayHTML(output_file_name)\r\n",
+					"displayHTML(\"</br>\")\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					"#Load the input to a data frame so we can process it and extract the day month and year from the path with a regex\r\n",
+					"\r\n",
+					"from pyspark.sql.types import StructType,StructField, StringType, IntegerType\r\n",
+					"input_data = [(input_file, input_folder_path, input_storageaccount, source_container_name, source_relative_path)]\r\n",
+					"\r\n",
+					"input_schema = StructType([ \\\r\n",
+					"    StructField(\"input_file\", StringType(), True), \\\r\n",
+					"    StructField(\"input_folder_path\", StringType(), True), \\\r\n",
+					"    StructField(\"input_storageaccount\", StringType(), True), \\\r\n",
+					"    StructField(\"source_container_name\", StringType(), True), \\\r\n",
+					"    StructField(\"source_relative_path\", StringType(), True) \\\r\n",
+					"  ])\r\n",
+					" \r\n",
+					"inputDf = spark.createDataFrame(data=input_data, schema=input_schema)\r\n",
+					"inputDf = inputDf.withColumn(\"Year\", regexp_extract(inputDf.source_relative_path, \"Year=(.+?)/\", 1))\r\n",
+					"inputDf = inputDf.withColumn(\"Month\", regexp_extract(inputDf.source_relative_path, \"Month=(.+?)/\", 1))\r\n",
+					"inputDf = inputDf.withColumn(\"Day\", regexp_extract(inputDf.source_relative_path, \"Day=(.*)\", 1))\r\n",
+					"\r\n",
+					"inputDf.printSchema()\r\n",
+					"inputDf.show(truncate=False)"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Load the input file to a data frame and check the schema\r\n",
+					"\r\n",
+					"source_file_name = input_file\r\n",
+					"input_storageaccount = input_storageaccount\r\n",
+					"inputPath = 'abfss://%s@%s.dfs.core.windows.net/%s' % (source_container_name, input_storageaccount, source_relative_path)\r\n",
+					"displayHTML(\"inputPath: %s</br>\" % inputPath)\r\n",
+					"inputStreamDf = spark.read.format('avro').load(inputPath)\r\n",
+					"\r\n",
+					"inputStreamDf.printSchema\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"# Convert the body field to a string and select fields I want and rename the message type column to something friendlier\r\n",
+					"\r\n",
+					"inputStreamDf = inputStreamDf.withColumn(\"Body\", expr(\"CAST(Body as String)\"))\r\n",
+					"inputStreamDf = inputStreamDf.select(inputStreamDf.Body, inputStreamDf.EnqueuedTimeUtc, inputStreamDf.Properties.CustomerID.member2, inputStreamDf.Properties.Year.member2, inputStreamDf.Properties.Month.member2, inputStreamDf.Properties.Day.member2)\r\n",
+					"inputStreamDf = inputStreamDf.withColumnRenamed(\"Properties[CustomerID].member2\", \"CustomerID\")\r\n",
+					"inputStreamDf = inputStreamDf.withColumnRenamed(\"Properties[Year].member2\", \"Year\")\r\n",
+					"inputStreamDf = inputStreamDf.withColumnRenamed(\"Properties[Month].member2\", \"Month\")\r\n",
+					"inputStreamDf = inputStreamDf.withColumnRenamed(\"Properties[Day].member2\", \"Day\")\r\n",
+					"\r\n",
+					"# Add the year month and day that originally came from the path to the data frame for partitioning later\r\n",
+					"\r\n",
+					"\r\n",
+					"year = inputDf.first().Year\r\n",
+					"month = inputDf.first().Month\r\n",
+					"day = inputDf.first().Day\r\n",
+					"#inputStreamDf = inputStreamDf.withColumn(\"Year\", lit(year))\r\n",
+					"#inputStreamDf = inputStreamDf.withColumn(\"Month\", lit(month))\r\n",
+					"#inputStreamDf = inputStreamDf.withColumn(\"Day\", lit(day))\r\n",
+					"inputStreamDf = inputStreamDf.withColumn(\"File\", lit(output_file_name))\r\n",
+					"\r\n",
+					"display(inputStreamDf)\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Write out the data frame to the new location, using the partitioning will split out the data into folders for different message types and also we will include the original file name as a partition folder too\r\n",
+					"\r\n",
+					"target_storageaccount_name = input_storageaccount\r\n",
+					"target_container_name = \"datalake\"\r\n",
+					"target_relative_path = \"Raw/Customer\"\r\n",
+					"\r\n",
+					"target_path = 'abfss://%s@%s.dfs.core.windows.net/%s' % (target_container_name, target_storageaccount_name, target_relative_path)\r\n",
+					"\r\n",
+					"inputStreamDf.write.partitionBy(\"Year\", \"Month\", \"Day\", \"File\").format(\"parquet\").mode(\"append\").save(target_path)"
+				],
+				"execution_count": null
+			}
+		]
+	}
+}

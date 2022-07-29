@@ -4,7 +4,13 @@ This repository will guide you through a complete escenario that ingest informat
 
 ![alt text](./wiki/images/architecture.jpg)
 
-First Part [Streaming-DataLake-Azure](./wiki/content/readme.md)
+First Part: [Streaming-DataLake-Azure](./wiki/content/readme.md)
+
+Hands-On: [Challenge One](./wiki/content/challenge-1.md)
+
+Transform/Process: [Transform Data](./wiki/content/transforming.md)
+
+Consume: [Machine Learning Integration](./wiki/content/readme.md)
 
 
 

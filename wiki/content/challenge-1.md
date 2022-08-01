@@ -16,13 +16,13 @@ These are the steps that you have to follow on your own
 
 6. Clone a pipeline (whichever is in synapse\pipeline) and change the notebook for the one that you just cloned
 
-![alt text](../images/ChangePipeline.jpg)
+![alt text](../images/changepipeline.jpg)
 
 7. Create a trigger from the pipeline, click on trigger and select New/Edit, and then fill everything like the image below
 
-![alt text](../images/CreateTrigger.jpg)
+![alt text](../images/createtrigger.jpg)
 
-![alt text](../images/NewTrigger.jpg)
+![alt text](../images/newtrigger.jpg)
 
 8. Publish your changes
 

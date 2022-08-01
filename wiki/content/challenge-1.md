@@ -33,3 +33,7 @@ These are the steps that you have to follow on your own
 if everything went well, you will see your View like this
 
 ![alt text](../images/datatargetmail.jpg)
+
+Next Step:
+
+Transform/Process: [Transform Data](transforming.md)

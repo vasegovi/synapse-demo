@@ -10,7 +10,7 @@ Hands-On: [Challenge One](./wiki/content/challenge-1.md)
 
 Transform/Process: [Transform Data](./wiki/content/transforming.md)
 
-Consume: [Machine Learning Integration](./wiki/content/readme.md)
+Consume: [Machine Learning Integration](./wiki/content/consume.md)
 
 
 

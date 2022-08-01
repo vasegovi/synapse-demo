@@ -189,3 +189,7 @@ Let's create a view to visualize our information, you can find the script in Dev
 ## Configuring the rest
 
 Now your challenge is configuring the rest, you have everything there, notebooks, pipelines, triggers and app clients, now go back and review what configuration is needed to start the rest OrderHeader, CreditCard and ProdCostHist.
+
+Next Step:
+
+Hands-On: [Challenge One](challenge-1.md)

@@ -49,3 +49,28 @@ Run the MLPredictions.sql script and you'll see your records in you sql dedicate
 
 ![alt text](../images/mlpredictions.jpg)
 
+Now that the ML.Predctions table is created select the (...) button and choose Machine Learning and then predict with a model.
+
+![alt text](../images/predictmodel.jpg)
+
+select the model that we created before
+
+![alt text](../images/selectmodel.jpg)
+
+Map the colmuns, usually it select the right source columns with the right target columns automatically.
+
+![alt text](../images/mappingmodel.jpg)
+
+Continue and select a name for the store procedure to create an the table where the metadata of the model will be save.
+
+![alt text](../images/storepredictions.jpg)
+
+And click on Deploy model + open script
+
+In the script that will show up, find the outputs and delete the second variable
+
+![alt text](../images/fixquery.jpg)
+
+Now you can run the script and it will create a evaluate the information of the table and will predict the value BikeKuyer with the model, with this process now you can create your process to evaluate your information and make a frecuent process to get the info that you need, compare with the info that you already have, etc...
+
+![alt text](../images/predictinbuyers.jpg)
